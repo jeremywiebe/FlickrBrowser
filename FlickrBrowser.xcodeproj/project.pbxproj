@@ -11,6 +11,7 @@
 		653B931567907B4DD1392C9B /* FlickrFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 653B9055C9A621DF6D23192F /* FlickrFetcher.m */; };
 		653B96A189A0C7C40BA049D4 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 653B9FB5E9B3A4350F3BE799 /* PhotoViewController.m */; };
 		653B97641339B5B1861E0580 /* TagsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 653B929E9A99082DB25822F3 /* TagsTableViewController.m */; };
+		653B987FE9905034D2A7AE21 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 653B9EE0BFAEC2D477EE5AAF /* .gitignore */; };
 		653B9A876DEC6ACFD9076FD2 /* PhotosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 653B96F630A015426198B8CD /* PhotosTableViewController.m */; };
 		CED198A8174C16C6004CDB50 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED198A7174C16C6004CDB50 /* UIKit.framework */; };
 		CED198AA174C16C6004CDB50 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED198A9174C16C6004CDB50 /* Foundation.framework */; };
@@ -35,6 +36,7 @@
 		653B96F630A015426198B8CD /* PhotosTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotosTableViewController.m; sourceTree = "<group>"; };
 		653B9BFB18A2D92443716C1F /* TagsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagsTableViewController.h; sourceTree = "<group>"; };
 		653B9D6B1011149B7400FA25 /* PhotosTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotosTableViewController.h; sourceTree = "<group>"; };
+		653B9EE0BFAEC2D477EE5AAF /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		653B9FB5E9B3A4350F3BE799 /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
 		653B9FC9775F95721472C2DE /* PhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoViewController.h; sourceTree = "<group>"; };
 		9E61EE9F574D40FA8583FFE0 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -90,6 +92,7 @@
 				CED198A6174C16C6004CDB50 /* Frameworks */,
 				CED198A5174C16C6004CDB50 /* Products */,
 				9E61EE9F574D40FA8583FFE0 /* Pods.xcconfig */,
+				653B9EE0BFAEC2D477EE5AAF /* .gitignore */,
 			);
 			sourceTree = "<group>";
 		};
@@ -207,6 +210,7 @@
 				CED198BC174C16C6004CDB50 /* Default@2x.png in Resources */,
 				CED198BE174C16C6004CDB50 /* Default-568h@2x.png in Resources */,
 				CED198C1174C16C6004CDB50 /* MainStoryboard.storyboard in Resources */,
+				653B987FE9905034D2A7AE21 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
