@@ -13,5 +13,7 @@ xcuserdata
 profile
 *.moved-aside
 DerivedData
-.idea
 *.hmap
+
+# AppCode files
+.idea
