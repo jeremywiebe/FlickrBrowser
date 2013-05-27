@@ -21,6 +21,13 @@
 - (void)setPhoto:(NSDictionary *)photo
 {
     _photo = photo;
+    NSDictionary * userInfo = [NSDictionary dictionaryWithObject:photo
+                                                          forKey:@"Photo"];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Photo Viewed"
+                                                        object:self
+                                                      userInfo:userInfo];
+
     [self resetImage];
 }
 

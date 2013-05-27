@@ -15,6 +15,14 @@
 
 @implementation PhotosTableViewController
 
+@synthesize photos = _photos;
+
+- (NSArray *)photos
+{
+    if (!_photos) _photos = [[NSArray alloc] init];
+    return _photos;
+}
+
 - (void)setPhotos:(NSArray *)photos
 {
     _photos = photos;

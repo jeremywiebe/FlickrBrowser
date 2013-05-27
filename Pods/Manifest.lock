@@ -1,0 +1,13 @@
+PODS:
+  - objectiveflickr (2.0.2)
+  - SVProgressHUD (0.9)
+
+DEPENDENCIES:
+  - objectiveflickr
+  - SVProgressHUD
+
+SPEC CHECKSUMS:
+  objectiveflickr: 17f5f1fd4b9b9d6761a9545493c79221f65604c3
+  SVProgressHUD: 03d4845ec8e64591726428a08236c6a5489d45f8
+
+COCOAPODS: 0.19.1

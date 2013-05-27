@@ -1,0 +1,2 @@
+pod 'objectiveflickr'
+pod 'SVProgressHUD'

@@ -41,7 +41,7 @@
             return [(NSString *) a[FLICKR_PHOTO_TITLE] compare:(NSString *) b[FLICKR_PHOTO_TITLE]];
         }
 
-        return (NSComparisonResult) NSOrderedSame;;
+        return (NSComparisonResult) NSOrderedSame;
     }];
 
     [self.tableView reloadData];
@@ -49,15 +49,33 @@
 
 - (void)photoViewed:(NSNotification *)notification
 {
-    if ([notification.object isKindOfClass:[NSDictionary class]])
+    NSDictionary *viewedPhoto = (NSDictionary *)notification.userInfo[@"Photo"];
+    NSUInteger photoIndex = [self.photos indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop)
     {
-        NSDictionary *photo = (NSDictionary *)notification.object;
-        self.photos = [self.photos arrayByAddingObject:photo];
+        NSDictionary *existingPhoto = (NSDictionary *)obj;
+        return existingPhoto[FLICKR_PHOTO_ID] == viewedPhoto[FLICKR_PHOTO_ID];
+    }];
 
-        [self saveRecentPhotos];
-
-        [self.tableView reloadData];
+    if (photoIndex == NSNotFound)
+    {
+        NSDictionary *newPhoto = [[NSDictionary alloc] initWithDictionary:viewedPhoto];
+        self.photos = [self.photos arrayByAddingObject:newPhoto];
     }
+    else
+    {
+        NSDictionary *existingPhoto = self.photos[photoIndex];
+        [existingPhoto setValue:[NSDate date]
+                         forKey:FLICKR_LAST_VIEWED];
+    }
+
+    [self saveRecentPhotos];
+
+    [self sortPhotos];
+}
+
+- (NSString *)subtitleForRow:(NSInteger)row
+{
+    return self.photos[row][FLICKR_LAST_VIEWED];
 }
 
 - (void)loadRecentPhotos

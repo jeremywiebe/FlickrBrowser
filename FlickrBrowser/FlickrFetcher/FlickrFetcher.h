@@ -19,7 +19,7 @@
 #define FLICKR_PHOTO_OWNER @"ownername"
 #define FLICKR_PHOTO_PLACE_NAME @"derived_place"  // doesn't work for Stanford photos
 #define FLICKR_TAGS @"tags"
-
+#define FLICKR_LAST_VIEWED @"last_viewed"
 #define NSLOG_FLICKR NO
 
 typedef enum

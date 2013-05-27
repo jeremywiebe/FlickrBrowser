@@ -41,13 +41,32 @@
     for (NSDictionary *item in self.photos)
     {
         NSString *tagString = item[FLICKR_TAGS];
-        NSArray *splitTags = [tagString componentsSeparatedByString:@" "];
+        NSArray *splitTags = [[tagString componentsSeparatedByString:@" "] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock: ^(id obj, NSDictionary *bindings)
+        {
+           if ([obj isKindOfClass:[NSString class]])
+           {
+               NSString *tag = (NSString *)obj;
+               if ([tag isEqualToString:@"cs193pspot"] ||
+                   [tag isEqualToString:@"landscape"] ||
+                   [tag isEqualToString:@"portrait"])
+               {
+                   return NO;
+               }
+               else
+               {
+                   return YES;
+               }
+           }
+
+            return NO;
+        }]];
 
         for (NSString *tag in splitTags)
         {
-            if (![newTags containsObject:tag])
+            NSString *fixedTag = [tag capitalizedString];
+            if (![newTags containsObject:fixedTag])
             {
-                [newTags addObject:tag];
+                [newTags addObject:fixedTag];
             }
         }
     }
@@ -55,6 +74,8 @@
     self.tags = newTags;
     [self.tableView reloadData];
 }
+
+
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -65,7 +86,7 @@
         {
             if ([segue.identifier isEqualToString:@"Show Photos"])
             {
-                NSString *tag = self.tags[indexPath.row];
+                NSString *tag = [self.tags[indexPath.row] lowercaseString];
                 NSArray *taggedPhotos = [self.photos filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings)
                 {
                     NSDictionary *properties = (NSDictionary *) evaluatedObject;
