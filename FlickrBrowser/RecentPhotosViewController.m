@@ -8,8 +8,12 @@
 
 #import "RecentPhotosViewController.h"
 #import "FlickrFetcher.h"
+#import "RecentPhotosMonitor.h"
+#import "FlickrBrowserAppDelegate.h"
 
 @interface RecentPhotosViewController ()
+
+@property(strong, nonatomic) NSDateFormatter *dateFormatter;
 
 @end
 
@@ -19,14 +23,31 @@
 {
     [super viewDidLoad];
 
-    // Load up recent photos viewed from isolated storage
-    [self loadRecentPhotos];
+    // Register with monitor to receive calls when recent list changes
+    FlickrBrowserAppDelegate *appDelegate = (FlickrBrowserAppDelegate *) [[UIApplication sharedApplication] delegate];
+    appDelegate.monitor.delegate = self;
 
-    // Register to be notified when a photo is viewed
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(photoViewed:)
-                                                 name:@"Photo Viewed"
-                                               object:nil];
+    // Load up recent photos viewed from isolated storage
+    [self updateRecentPhotos];
+}
+
+- (NSDateFormatter *)dateFormatter
+{
+    if (!_dateFormatter)
+    {
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        [_dateFormatter setDateFormat:@"MMM dd, yyyy 'at' HH:mm a"];
+    }
+    return _dateFormatter;
+}
+
+- (void)updateRecentPhotos
+{
+    // Talk to monitor to get the list of photos.
+    FlickrBrowserAppDelegate *appDelegate = (FlickrBrowserAppDelegate *) [[UIApplication sharedApplication] delegate];
+
+    self.photos = appDelegate.monitor.photos;
+    [self sortPhotos];
 }
 
 - (void)sortPhotos
@@ -38,7 +59,19 @@
             NSDictionary *a = (NSDictionary *) objA;
             NSDictionary *b = (NSDictionary *) objB;
 
-            return [(NSString *) a[FLICKR_PHOTO_TITLE] compare:(NSString *) b[FLICKR_PHOTO_TITLE]];
+            NSComparisonResult result = [(NSDate *) a[FLICKR_LAST_VIEWED] compare:(NSDate *) b[FLICKR_LAST_VIEWED]];
+            if (result == NSOrderedAscending)
+            {
+                return NSOrderedDescending;
+            }
+            else if (result == NSOrderedDescending)
+            {
+                return NSOrderedAscending;
+            }
+            else
+            {
+                return result;
+            }
         }
 
         return (NSComparisonResult) NSOrderedSame;
@@ -47,49 +80,15 @@
     [self.tableView reloadData];
 }
 
-- (void)photoViewed:(NSNotification *)notification
-{
-    NSDictionary *viewedPhoto = (NSDictionary *)notification.userInfo[@"Photo"];
-    NSUInteger photoIndex = [self.photos indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop)
-    {
-        NSDictionary *existingPhoto = (NSDictionary *)obj;
-        return existingPhoto[FLICKR_PHOTO_ID] == viewedPhoto[FLICKR_PHOTO_ID];
-    }];
-
-    if (photoIndex == NSNotFound)
-    {
-        NSDictionary *newPhoto = [[NSDictionary alloc] initWithDictionary:viewedPhoto];
-        self.photos = [self.photos arrayByAddingObject:newPhoto];
-    }
-    else
-    {
-        NSDictionary *existingPhoto = self.photos[photoIndex];
-        [existingPhoto setValue:[NSDate date]
-                         forKey:FLICKR_LAST_VIEWED];
-    }
-
-    [self saveRecentPhotos];
-
-    [self sortPhotos];
-}
-
 - (NSString *)subtitleForRow:(NSInteger)row
 {
-    return self.photos[row][FLICKR_LAST_VIEWED];
+    NSDate *lastViewed = self.photos[row][FLICKR_LAST_VIEWED];
+    return [self.dateFormatter stringFromDate:lastViewed];
 }
 
-- (void)loadRecentPhotos
+- (void)recentPhotoListDidChange:(RecentPhotosMonitor *)monitor
 {
-    self.photos = [[NSUserDefaults standardUserDefaults] arrayForKey:RecentPhotosUserDefaultsKey];
-    [self sortPhotos];
+    [self updateRecentPhotos];
 }
-
-- (void)saveRecentPhotos
-{
-    [[NSUserDefaults standardUserDefaults] setObject:self.photos
-                                              forKey:RecentPhotosUserDefaultsKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
 
 @end

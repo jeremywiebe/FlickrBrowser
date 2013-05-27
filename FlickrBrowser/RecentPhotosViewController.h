@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "PhotosTableViewController.h"
+#import "PhotoViewedDelegate.h"
 
 static NSString *const RecentPhotosUserDefaultsKey = @"Recent Photos";
 
-@interface RecentPhotosViewController : PhotosTableViewController
+@interface RecentPhotosViewController : PhotosTableViewController <PhotoViewedDelegate>
+
+@property NSString *RecentPhotoListDidChangeNotification;
 
 @end
