@@ -80,6 +80,11 @@
 {
     if ([self.photos count] > MAX_RECENT_PHOTOS)
     {
+        self.photos = [self.photos sortedArrayUsingComparator:^(id a, id b)
+        {
+            // Sort descending.
+            return [b[FLICKR_LAST_VIEWED] compare:a[FLICKR_LAST_VIEWED]];
+        }];
         self.photos = [self.photos subarrayWithRange:NSMakeRange(0, MAX_RECENT_PHOTOS)];
     }
 }
