@@ -5,7 +5,6 @@
 // To change the template use AppCode | Preferences | File Templates.
 //
 
-
 #import "PhotoViewController.h"
 #import "FlickrFetcher.h"
 
@@ -13,6 +12,7 @@
 
 @property(weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property(strong, nonatomic) UIImageView *imageView;
+@property(nonatomic) BOOL hasScaled;
 
 @end
 
@@ -21,8 +21,10 @@
 - (void)setPhoto:(NSDictionary *)photo
 {
     _photo = photo;
-    NSDictionary * userInfo = [NSDictionary dictionaryWithObject:photo
-                                                          forKey:@"Photo"];
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:photo
+                                                         forKey:@"Photo"];
+
+    self.hasScaled = NO;
 
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Photo Viewed"
                                                         object:self
@@ -40,12 +42,30 @@
 {
     [super viewDidLoad];
     [self.scrollView addSubview:self.imageView];
-    self.scrollView.minimumZoomScale = 0.2;
     self.scrollView.maximumZoomScale = 5.0;
     self.scrollView.delegate = self;
     [self resetImage];
 }
 
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+
+    if (self.scrollView)
+    {
+        // Zoom our image so that at least one dimension fills the frame
+        // (x or y... might not be both if the image isn't the same aspect
+        // ratio as the scroll view)
+        CGSize scrollFrameSize = self.scrollView.frame.size;
+        CGSize scrollContentSize = self.scrollView.contentSize;
+
+        CGFloat scale = MIN(scrollFrameSize.width / scrollContentSize.width,
+        scrollFrameSize.height / scrollContentSize.height);
+
+        self.scrollView.minimumZoomScale = scale;
+        self.scrollView.zoomScale = scale;
+    }
+}
 
 // fetches the data from the URL
 // turns it into an image
@@ -63,7 +83,6 @@
         UIImage *image = [[UIImage alloc] initWithData:imageData];
         if (image)
         {
-            self.scrollView.zoomScale = 1.0;
             self.scrollView.contentSize = image.size;
             self.imageView.image = image;
             self.imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
